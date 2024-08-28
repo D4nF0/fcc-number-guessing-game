@@ -12,13 +12,14 @@ WELCOME() {
   USER=$($PSQL "SELECT username FROM users_games WHERE username='$USERNAME'")
   GAMES_PLAYED=$($PSQL "SELECT games_played FROM users_games WHERE username='$USERNAME'")
   BEST_GAME=$($PSQL "SELECT best_game FROM users_games WHERE username='$USERNAME'")
-  
+  USER_ID=$($PSQL "SELECT user_id FROM users_games WHERE username='$USERNAME'")
+
   if [[ -z $USER ]]
   then
-    FIRST_TIME=TRUE
+    FIRST_TIME=1
     echo "Welcome, $USERNAME! It looks like this is your first time here."
   else 
-    FIRST_TIME=FALSE
+    FIRST_TIME=0
     echo "Welcome back, $USERNAME! You have played $GAMES_PLAYED games, and your best game took $BEST_GAME guesses."
   fi
 
@@ -43,17 +44,18 @@ GUESSER() {
     else
       if [[ $1 -eq $SECRET_NUMBER ]]
       then
-        if [[ $FIRST_TIME ]]
+
+        if [[ $FIRST_TIME -eq 1 ]]
         then
           DATABASE_RESULT=$($PSQL "INSERT INTO users_games( username, games_played, best_game) VALUES( '$USERNAME', 1, $NUMBER_OF_GUESSES);")
 
         else
           let GAMES_PLAYED+=1
-          DATABASE_RESULT=$($PSQL "UPDATE users_games SET games_played=$GAMES_PLAYED WHERE username='$USERNAME' ")
+          DATABASE_RESULT=$($PSQL "UPDATE users_games SET games_played=$GAMES_PLAYED WHERE user_id=$USER_ID;")
 
           if [[ $BEST_GAME -gt $NUMBER_OF_GUESSES ]]
           then
-            DATABASE_RESULT=$($PSQL "UPDATE users_games SET best_game=$NUMBER_OF_GUESSES WHERE username='$USERNAME' ")
+            DATABASE_RESULT=$($PSQL "UPDATE users_games SET best_game=$NUMBER_OF_GUESSES WHERE user_id=$USER_ID;")
 
           fi
 

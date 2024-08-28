@@ -90,14 +90,13 @@ ALTER TABLE ONLY public.users_games ALTER COLUMN user_id SET DEFAULT nextval('pu
 -- Data for Name: users_games; Type: TABLE DATA; Schema: public; Owner: freecodecamp
 --
 
-INSERT INTO public.users_games VALUES ('Danfo', 5, 8, 1);
 
 
 --
 -- Name: users_games_user_id_seq; Type: SEQUENCE SET; Schema: public; Owner: freecodecamp
 --
 
-SELECT pg_catalog.setval('public.users_games_user_id_seq', 1, true);
+SELECT pg_catalog.setval('public.users_games_user_id_seq', 33, true);
 
 
 --
